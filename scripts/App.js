@@ -117,6 +117,7 @@ $(function() {
     // adding it to a *Local Variable* instead of persisting it to *localStorage*.
     createOnEnter: function(e) {
       if (e.keyCode != 13) return;
+      if (!this.input.val()) return;
 
       var todo = new Todo({
         title: this.input.val()
