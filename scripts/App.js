@@ -5,14 +5,20 @@ $(function() {
   // Todo Model
   // ----------
 
-  // Our basic **Todo** model has a `title` attribute.
+  // Our basic **Todo** model has `title`, and `done` attributes.
   var Todo = Backbone.Model.extend({
 
     // Default attributes for the todo item.
     defaults: function() {
       return {
         title: "empty todo...",
+        done: false
       };
+    },
+
+    // Toggle the `done` state of this todo item.
+    toggle: function() {
+      this.set('done', !this.get("done"));
     }
 
   });
@@ -44,6 +50,11 @@ $(function() {
     // Cache the template function for a single item.
     template: _.template($('#item-template').html()),
 
+    // The DOM events specific to an item.
+    events: {
+      "click .toggle": "toggleDone",
+    },
+
     // The TodoView listens for changes to its model, re-rendering. Since there's
     // a one-to-one correspondence between a **Todo** and a **TodoView** in this
     // app, we set a direct reference on the model for convenience.
@@ -54,7 +65,13 @@ $(function() {
     // Re-render the titles of the todo item.
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
+      this.$el.toggleClass('done', this.model.get('done'));
       return this;
+    },
+
+    // Toggle the `"done"` state of the model.
+    toggleDone: function() {
+      this.model.toggle();
     }
 
   });
