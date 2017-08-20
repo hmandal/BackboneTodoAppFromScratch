@@ -58,4 +58,66 @@ $(function() {
     }
 
   });
+
+  // The Application
+  // ---------------
+
+  // Our overall **AppView** is the top-level piece of UI.
+  var AppView = Backbone.View.extend({
+
+    // Instead of generating a new element, bind to the existing skeleton of
+    // the App already present in the HTML.
+    el: $("#todoapp"),
+
+    // Delegated events for creating new items.
+    events: {
+      "keypress #new-todo": "createOnEnter",
+    },
+
+    // At initialization we bind to the relevant events on the `Todos`
+    // collection, when items are added or changed.
+    initialize: function() {
+
+      this.input = this.$("#new-todo");
+
+      // whenever anything changes, re-render.
+      this.listenTo(Todos, 'all', this.render);
+
+      this.main = $('#main');
+    },
+
+    // Re-rendering the App just means refreshing the statistics -- the rest
+    // of the app doesn't change.
+    render: function() {
+      if (Todos.length) {
+        this.main.show();
+      } else {
+        this.main.hide();
+      }
+    },
+
+    // If you hit return in the main input field, create new **Todo** model,
+    // adding it to a *Local Variable* instead of persisting it to *localStorage*.
+    createOnEnter: function(e) {
+      if (e.keyCode != 13) return;
+
+      var todo = new Todo({
+        title: this.input.val()
+      });
+      Todos.add(todo);
+
+      var view = new TodoView({
+        model: todo
+      });
+      this.$("#todo-list").append(view.render().el);
+
+      // clear the input once the todo is added to our list.
+      this.input.val('');
+    }
+
+  });
+
+  // Finally, we kick things off by creating the **App**.
+  var App = new AppView;
+
 });
