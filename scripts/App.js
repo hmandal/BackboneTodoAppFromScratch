@@ -17,6 +17,21 @@ $(function() {
 
   });
 
+  // Todo Collection
+  // ---------------
+
+  // The collection of todos is backed by *Local Variable* instead of a *localStorage* or a remote
+  // server.
+  var TodoList = Backbone.Collection.extend({
+
+    // Reference to this collection's model.
+    model: Todo,
+
+  });
+
+  // Create our global collection of **Todos**.
+  var Todos = new TodoList;
+
   // Todo Item View
   // --------------
 
